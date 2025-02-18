@@ -5,10 +5,14 @@ import {
   RefreshTokenDto,
 } from '../user/dto/user.dto';
 import { AuthService } from './auth.service';
+import { TokenService } from '../token/token.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly tokenService: TokenService,
+  ) {}
 
   @Post('signup')
   signup(@Body() createUserDto: CreateUserDto) {
@@ -26,6 +30,6 @@ export class AuthController {
 
   @Post('token')
   refreshAccessToken(@Body() body: RefreshTokenDto) {
-    return this.authService.refreshAccessToken(body.refreshToken);
+    return this.tokenService.refreshAccessToken(body.refreshToken);
   }
 }

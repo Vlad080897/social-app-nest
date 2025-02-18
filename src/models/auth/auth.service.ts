@@ -66,22 +66,15 @@ export class AuthService {
   }
 
   async logout(refreshToken: string) {
-    try {
-      await this.tokenService.deleteRefreshToken(refreshToken);
-    } catch {
-      throw new HttpException(
-        'Token was already invalidated',
-        HttpStatus.NOT_FOUND,
-      );
+    const result = await this.tokenService.deleteRefreshToken(refreshToken);
+
+    if (result.affected === 0) {
+      throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);
     }
 
     return {
       message: 'Logout successful',
     };
-  }
-
-  async refreshAccessToken(refreshToken: string) {
-    return this.tokenService.refreshAccessToken(refreshToken);
   }
 
   private hashPassword(password: string) {
